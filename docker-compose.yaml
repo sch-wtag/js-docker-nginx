@@ -5,19 +5,25 @@ services:
     build: .
     environment:
       - APP_NAME=App1
-    ports:
-      - "3001:3000"
 
   app2:
     build: .
     environment:
       - APP_NAME=App2
-    ports:
-      - "3002:3000"
 
   app3:
     build: .
     environment:
       - APP_NAME=App3
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx_proxy
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf # Custom NGINX config file
     ports:
-      - "3003:3000"
+      - "8080:8080" # Expose port 8080 for the proxy server
+    depends_on:
+      - app1
+      - app2
+      - app3
